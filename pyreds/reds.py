@@ -56,7 +56,7 @@ class Search:
         global searchch, searchen
 
         if check_contain_chinese(txt):
-            searchen.index(split_en_from_ch(txt), id)
+            searchen.index(split_en_from_ch(txt), id)  # todo 待优化
             return searchch.index(txt, id)
         else:
             return searchen.index(txt, id)
