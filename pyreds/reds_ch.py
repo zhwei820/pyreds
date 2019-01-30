@@ -25,6 +25,11 @@ def _words(s):
     return jieba.cut_for_search(s)
 
 
+# Return the words in `str`.
+def _index_words(s):
+    return list(jieba.cut_for_search(s)) + list(s)
+
+
 # Strip stop words in `words`.
 def _strip_stopwords(words):
     ret = []
@@ -94,8 +99,6 @@ class Query:
         if not len(keys):
             return []
 
-        # keys = [key.encode('utf-8') for key in keys]
-
         tkey = key + 'tmpkey'
         pipe = db.pipeline()
         getattr(pipe, type)(tkey, keys)
@@ -120,7 +123,7 @@ class Search:
     def index(self, txt, id):
         key = self.key
         db = self.client
-        words = _strip_stopwords(_words(txt))
+        words = _strip_stopwords(_index_words(txt))
         counts = _count_words(words)
         keys = words
 
@@ -141,7 +144,7 @@ class Search:
         key = self.key
         db = self.client
 
-        constants =  db.zrevrangebyscore(key + ':object:' + str(id), '+inf', 0)
+        constants = db.zrevrangebyscore(key + ':object:' + str(id), '+inf', 0)
 
         pipe = db.pipeline()
         pipe.delete(key + ':object:' + str(id))
@@ -153,5 +156,5 @@ class Search:
 
     # Perform a search on the given `query` returning
     # a `Query` instance.
-    def query(self, txt, type = None):
+    def query(self, txt, type=None):
         return Query(txt, type, self)

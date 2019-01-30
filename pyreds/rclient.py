@@ -5,9 +5,11 @@ import redis
 
 _redis_client = None
 
+
 def set_client(in_client):
     global _redis_client
     _redis_client = in_client
+
 
 def create_client():
     global _redis_client

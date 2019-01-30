@@ -20,6 +20,7 @@ types = {
 
 _ASCII_STR_RE = re.compile(r'[a-zA-Z0-9_]+')
 
+
 def create_search(key):
     if not key:
         raise ValueError('create_search() requires a redis key for namespacing.')
